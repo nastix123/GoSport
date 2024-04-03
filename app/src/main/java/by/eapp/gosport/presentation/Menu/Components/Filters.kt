@@ -8,15 +8,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import by.eapp.gosport.presentation.Menu.CustomText
+import by.eapp.gosport.presentation.Menu.MenuViewModel
 import by.eapp.gosport.ui.theme.SelectedChip
 import by.eapp.gosport.ui.theme.SelectedItem
 import by.eapp.gosport.ui.theme.UnselectedChip
@@ -26,29 +30,28 @@ import by.eapp.gosport.ui.theme.secondaryText
 @Composable
 fun FilterRow(
     filters: List<String>,
+    viewModel: MenuViewModel = hiltViewModel()
 ) {
-    var selectedChip by rememberSaveable {
-        mutableStateOf("")
-    }
+
+    val selectedCategory = viewModel.selectedCategory.collectAsState()
 
     LazyRow(modifier = Modifier.fillMaxWidth()) {
         items(filters) { item ->
             FilterChip(
                 modifier = Modifier.padding(horizontal = 6.dp),
-                selected = (item == selectedChip),
+                selected = (item == selectedCategory.value),
                 onClick = {
-                    selectedChip = item
-
+                    viewModel.filterByCategory(selectedCategory.value?: item)
                 },
                 label = {
                     CustomText(
                         text = item,
-                        color = if (item == selectedChip) SelectedItem else secondaryText
+                        color = if (item == selectedCategory.value) SelectedItem else secondaryText
                     )
                 },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = SelectedChip,
-                    containerColor = Color.White,
+                    disabledContainerColor = Color.White,
                 ),
                 border = null,
                 elevation = FilterChipDefaults.filterChipElevation(
@@ -59,6 +62,7 @@ fun FilterRow(
         }
     }
 }
+
 
 @Preview
 @Composable

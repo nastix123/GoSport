@@ -1,6 +1,5 @@
 package by.eapp.gosport.presentation.Menu
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,10 +28,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -47,15 +44,26 @@ fun MenuScreen(
     navController: NavHostController,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
+
     val categories = viewModel.categories.collectAsState()
     val selectedCity = remember { mutableStateOf("") }
     val menuItems = viewModel.dishes.collectAsLazyPagingItems()
-    val cities = listOf("Москва", "Санкт-Петербург", "Астрахань", "Казань","Новосибирск","Волгоград","Владивосток")
+    val cities = listOf(
+        "Москва",
+        "Санкт-Петербург",
+        "Астрахань",
+        "Казань",
+        "Новосибирск",
+        "Волгоград",
+        "Владивосток"
+    )
+
     val showDropdown = remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = { BottomBar(navController) }
-    ) { it
+    ) {
+        it
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
@@ -85,7 +93,10 @@ fun MenuScreen(
 
             BannerRow()
             Spacer(modifier = Modifier.height(10.dp))
-            FilterRow(filters = categories.value)
+            FilterRow(
+                filters = categories.value,
+                viewModel = viewModel
+            )
             Spacer(modifier = Modifier.height(10.dp))
             MenuColumn(listOfDishes = menuItems)
         }
