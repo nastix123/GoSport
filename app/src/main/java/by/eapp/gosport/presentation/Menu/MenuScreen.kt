@@ -1,5 +1,6 @@
 package by.eapp.gosport.presentation.Menu
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,8 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -36,21 +40,22 @@ import by.eapp.gosport.navigation.BottomBar
 import by.eapp.gosport.presentation.Menu.Components.BannerRow
 import by.eapp.gosport.presentation.Menu.Components.DropdownList
 import by.eapp.gosport.presentation.Menu.Components.FilterRow
+import by.eapp.gosport.presentation.Menu.Components.MenuColumn
 
 @Composable
 fun MenuScreen(
     navController: NavHostController,
     viewModel: MenuViewModel = hiltViewModel(),
 ) {
-    val cities = listOf("Москва", "Санкт-Петербург", "Новосибирск", "Екатеринбург", "Казань")
+    val categories = viewModel.categories.collectAsState()
     val selectedCity = remember { mutableStateOf("") }
     val menuItems = viewModel.dishes.collectAsLazyPagingItems()
-
+    val cities = listOf("Москва", "Санкт-Петербург", "Астрахань", "Казань","Новосибирск","Волгоград","Владивосток")
+    val showDropdown = remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = { BottomBar(navController) }
-    ) {
-        it
+    ) { it
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
@@ -67,10 +72,9 @@ fun MenuScreen(
                         selectedIndex = 0,
                         onItemClick = { index -> selectedCity.value = cities[index] },
                         modifier = Modifier.padding(bottom = 16.dp),
-                        icon = Icons.Default.ArrowDropDown
+                        icon = Icons.Default.ArrowDropDown,
+                        showDropdown = showDropdown.value
                     )
-
-
                 }
                 Icon(
                     imageVector = Icons.Default.QrCode,
@@ -81,7 +85,9 @@ fun MenuScreen(
 
             BannerRow()
             Spacer(modifier = Modifier.height(10.dp))
-            FilterRow(filters = cities)
+            FilterRow(filters = categories.value)
+            Spacer(modifier = Modifier.height(10.dp))
+            MenuColumn(listOfDishes = menuItems)
         }
     }
 }

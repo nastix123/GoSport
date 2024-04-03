@@ -49,7 +49,8 @@ fun MenuItem(
                 AsyncImage(
                     model = imageUrl,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop)
+                    contentScale = ContentScale.Crop
+                )
             }
             Spacer(modifier = Modifier.width(10.dp))
             Column {

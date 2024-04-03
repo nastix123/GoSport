@@ -29,10 +29,9 @@ fun DropdownList(
     selectedIndex: Int,
     modifier: Modifier,
     onItemClick: (Int) -> Unit,
-    icon: ImageVector
+    icon: ImageVector,
+    showDropdown: Boolean
 ) {
-    var showDropdown by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center
@@ -40,14 +39,11 @@ fun DropdownList(
 
         Box(
             modifier = Modifier
-                .clickable { showDropdown = !showDropdown }
+                .clickable { /* Toggle dropdown visibility */ }
                 .padding(8.dp),
             contentAlignment = Alignment.CenterStart
         ) {
-            Row(
-
-
-            ) {
+            Row() {
                 CustomText(
                     text = itemList[selectedIndex],
                     color = Color.Black
@@ -76,7 +72,7 @@ fun DropdownList(
                             modifier = Modifier
                                 .clickable {
                                     onItemClick(index)
-                                    showDropdown = false
+                                    // Close dropdown after item selection
                                 }
                                 .padding(8.dp)
                         )
