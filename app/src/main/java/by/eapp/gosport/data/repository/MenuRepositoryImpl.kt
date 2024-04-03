@@ -1,5 +1,6 @@
 package by.eapp.gosport.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -18,6 +19,10 @@ import javax.inject.Inject
 class MenuRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ) : MenuRepository {
+
+    companion object {
+        val TAG: String = MenuRepositoryImpl::class.java.name
+    }
     override suspend fun getMenu(): Flow<PagingData<MenuItem>> {
         return Pager(
             config = PagingConfig(pageSize = 20, prefetchDistance = 5),
@@ -29,10 +34,12 @@ class MenuRepositoryImpl @Inject constructor(
         return flow {
             val response = apiService.getCategories()
             if (response.isSuccessful) {
-                val categories = response.body()?.map { it.toCategory() } ?: emptyList()
+                val categories = response.body()?.categories?.map { it.toCategory() } ?: emptyList()
                 emit(categories)
+                Log.d(TAG, "api reauest is successful")
             } else {
                 throw HttpException(response)
+                Log.d(TAG, "api reauest is not successful")
             }
         }
     }

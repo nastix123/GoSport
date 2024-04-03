@@ -18,7 +18,7 @@ class MenuPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MenuItem> {
         return try {
             val currentPage = params.key?:1
-            val meals = apiService.getMenu().body()
+            val meals = apiService.getMenu().body()?.meals
             val nextKey = if (meals!!.isEmpty()) null else currentPage + 1
             LoadResult.Page(
                 data = meals.map {
