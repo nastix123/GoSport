@@ -10,13 +10,16 @@ import javax.inject.Inject
 class GetMenuUseCase @Inject constructor(
     private val repository: MenuRepository
 ) {
-    suspend operator fun invoke(): Flow<PagingData<MenuItem>> = repository.getMenu()
+    suspend fun getMenuFromApi() = repository.getMenuFromApi()
+    suspend fun getMenuFromDb() = repository.getMenuFromDb()
+
 }
 
 class GetCategoriesUseCase @Inject constructor(
     private val repository: MenuRepository
 ) {
-    suspend operator fun invoke(): Flow<List<Category>> = repository.getCategories()
+    suspend fun getCategoriesFromApi() = repository.getCategoriesFromApi()
+    suspend fun getCategoriesFromDb() = repository.getCategoriesFromDb()
 }
 
 data class UseCases(
